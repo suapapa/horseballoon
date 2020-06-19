@@ -67,7 +67,12 @@ func record(ctx context.Context, wg *sync.WaitGroup) {
 
 		log.Println("!! on air !!")
 		pR, pW := io.Pipe()
-		go kakaoSTT(ctx, pR)
+		go func() {
+			err := kakaoSTT(ctx, pR)
+			if err != nil {
+				log.Printf("fail to stt: %v", err)
+			}
+		}()
 
 		for {
 			select {

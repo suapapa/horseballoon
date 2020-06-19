@@ -18,18 +18,22 @@ type sttResponse struct {
 }
 
 // https://developers.kakao.com/docs/latest/ko/voice/rest-api
-func kakaoSTT(ctx context.Context, r io.Reader) {
+func kakaoSTT(ctx context.Context, r io.Reader) error {
 	req, err := http.NewRequestWithContext(ctx, "POST",
 		"https://kakaoi-newtone-openapi.kakao.com/v1/recognize",
 		r,
 	)
-	chk(err)
+	if err != nil {
+		return err
+	}
 	req.Header.Set("Transfer-Encoding", "chunked")
 	req.Header.Set("Content-Type", "application/octet-stream")
 	req.Header.Set("Authorization", "KakaoAK "+os.Getenv("DEVKAKAO_APIKEY"))
 
 	resp, err := http.DefaultClient.Do(req)
-	chk(err)
+	if err != nil {
+		return err
+	}
 	defer resp.Body.Close()
 	// io.Copy(os.Stdout, resp.Body)
 	_, params, _ := mime.ParseMediaType(resp.Header.Get("Content-Type"))
@@ -37,12 +41,14 @@ func kakaoSTT(ctx context.Context, r io.Reader) {
 	for part, err := mr.NextPart(); err == nil; part, err = mr.NextPart() {
 		select {
 		case <-ctx.Done():
-			return
+			return nil
 		default:
 		}
 		var resp sttResponse
 		err := json.NewDecoder(part).Decode(&resp)
-		chk(err)
+		if err != nil {
+			return err
+		}
 		if resp.Type == "finalResult" {
 			// log.Println(resp.Value)
 			// fmt.Println(translate(ctx, resp.Value))
@@ -58,4 +64,5 @@ func kakaoSTT(ctx context.Context, r io.Reader) {
 			game.Unlock()
 		}
 	}
+	return nil
 }
