@@ -4,8 +4,6 @@ import (
 	"context"
 	"flag"
 	"log"
-	"os"
-	"os/signal"
 	"sync"
 )
 
@@ -14,6 +12,8 @@ type ctxKey struct{}
 var (
 	recordBuffSize  int
 	quiteThreshhold int
+
+	// guiCh chan string
 )
 
 func main() {
@@ -23,16 +23,14 @@ func main() {
 
 	log.Println("press ctrl-c to stop.")
 
-	sig := make(chan os.Signal, 1)
-	signal.Notify(sig, os.Interrupt, os.Kill)
-
 	var wg sync.WaitGroup
 	ctx := context.Background()
 	ctx, cancle := context.WithCancel(ctx)
+	// guiCh = make(chan string, 10)
 	wg.Add(1)
 	go record(ctx, &wg)
+	gui()
 
-	<-sig
 	cancle()
 	wg.Wait()
 	log.Println("bye")

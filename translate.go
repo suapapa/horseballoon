@@ -15,7 +15,7 @@ type translateResp struct {
 }
 
 // https://developers.kakao.com/docs/latest/ko/translate/dev-guide
-func translate(ctx context.Context, src string) string {
+func translate(ctx context.Context, src string) (string, error) {
 	log.Println("kr:", src)
 	qVal := make(url.Values)
 	qVal.Add("src_lang", "kr")
@@ -28,19 +28,25 @@ func translate(ctx context.Context, src string) string {
 		"https://kapi.kakao.com/v1/translation/translate",
 		body,
 	)
-	chk(err)
+	if err != nil {
+		return "", err
+	}
 	req.Header.Set("Authorization", "KakaoAK "+os.Getenv("DEVKAKAO_APIKEY"))
 	req.Header.Set("Content-Type", "application/x-www-form-urlencoded")
 
 	resp, err := http.DefaultClient.Do(req)
-	chk(err)
+	if err != nil {
+		return "", err
+	}
 	defer resp.Body.Close()
 
 	var trResp translateResp
 	err = json.NewDecoder(resp.Body).Decode(&trResp)
-	chk(err)
+	if err != nil {
+		return "", err
+	}
 	en := trResp.TranslatedText[0][0]
 	log.Println("en:", en)
 
-	return en
+	return en, nil
 }

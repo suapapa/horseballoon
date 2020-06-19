@@ -3,12 +3,13 @@ package main
 import (
 	"context"
 	"encoding/json"
-	"fmt"
 	"io"
+	"log"
 	"mime"
 	"mime/multipart"
 	"net/http"
 	"os"
+	"time"
 )
 
 type sttResponse struct {
@@ -43,8 +44,18 @@ func kakaoSTT(ctx context.Context, r io.Reader) {
 		err := json.NewDecoder(part).Decode(&resp)
 		chk(err)
 		if resp.Type == "finalResult" {
-			// fmt.Println(resp.Value)
-			fmt.Println(translate(ctx, resp.Value))
+			// log.Println(resp.Value)
+			// fmt.Println(translate(ctx, resp.Value))
+			en, err := translate(ctx, resp.Value)
+			if err != nil {
+				log.Printf("translate failed: %v", err)
+				continue
+			}
+
+			game.Lock()
+			game.Str = en
+			game.Start = time.Now()
+			game.Unlock()
 		}
 	}
 }
