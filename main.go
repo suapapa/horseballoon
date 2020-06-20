@@ -1,3 +1,7 @@
+// Copyright 2020 Homin Lee <homin.lee@suapapa.net>. All rights reserved.
+// Use of this source code is governed by a BSD-style
+// license that can be found in the LICENSE file.
+
 package main
 
 import (
@@ -12,8 +16,6 @@ type ctxKey struct{}
 var (
 	recordBuffSize  int
 	quiteThreshhold int
-
-	// guiCh chan string
 )
 
 func main() {
@@ -26,7 +28,7 @@ func main() {
 	var wg sync.WaitGroup
 	ctx := context.Background()
 	ctx, cancle := context.WithCancel(ctx)
-	// guiCh = make(chan string, 10)
+
 	wg.Add(1)
 	go record(ctx, &wg)
 	gui()

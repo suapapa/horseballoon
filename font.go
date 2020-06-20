@@ -1,3 +1,7 @@
+// Copyright 2020 Homin Lee <homin.lee@suapapa.net>. All rights reserved.
+// Use of this source code is governed by a BSD-style
+// license that can be found in the LICENSE file.
+
 package main
 
 import (
@@ -81,13 +85,13 @@ func drawTextBullon(screen *ebiten.Image, msg string, msgColor color.Color) {
 
 	// draw tail
 	drawTile(bImg, fx, fy, 12)
-	drawTile(bImg, fx, fy-16, 24)
+	drawTile(bImg, fx, fy-16, 16)
 
 	msgW, msgH := getSize(msg)
 
 	bW, bH := bImg.Size()
 	msgX := (bW - msgW) / 2
-	msgY := (bH-msgH)/2 + 24
+	msgY := (bH-msgH)/2 + 28
 	text.Draw(bImg, msg, penFont, msgX, msgY, msgColor)
 
 	scrnW, scrnH := screen.Size()
