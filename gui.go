@@ -11,6 +11,7 @@ import (
 
 // Game implements ebiten.Game interface.
 type Game struct {
+	Lang  string
 	Str   string
 	Start time.Time
 
@@ -43,7 +44,11 @@ func (g *Game) Draw(screen *ebiten.Image) {
 	screen.Fill(maskColor)
 	g.RLock()
 	defer g.RUnlock()
-	drawTextBullon(screen, g.Str)
+	if g.Lang == "en" {
+		drawTextBullon(screen, g.Str, color.White)
+	} else {
+		drawTextBullon(screen, g.Str, color.Black)
+	}
 }
 
 // Layout takes the outside size (e.g., the window size) and returns the (logical) screen size.

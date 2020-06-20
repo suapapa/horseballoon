@@ -29,7 +29,7 @@ func init() {
 	})
 }
 
-func drawTextBullon(screen *ebiten.Image, msg string) {
+func drawTextBullon(screen *ebiten.Image, msg string, msgColor color.Color) {
 	if msg == "" {
 		return
 	}
@@ -88,7 +88,7 @@ func drawTextBullon(screen *ebiten.Image, msg string) {
 	bW, bH := bImg.Size()
 	msgX := (bW - msgW) / 2
 	msgY := (bH-msgH)/2 + 24
-	text.Draw(bImg, msg, penFont, msgX, msgY, color.White)
+	text.Draw(bImg, msg, penFont, msgX, msgY, msgColor)
 
 	scrnW, scrnH := screen.Size()
 	bX := scrnW - bW - 10

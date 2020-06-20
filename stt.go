@@ -59,7 +59,15 @@ func kakaoSTT(ctx context.Context, r io.Reader) error {
 			}
 
 			game.Lock()
+			game.Lang = "en"
 			game.Str = en
+			game.Start = time.Now()
+			game.Unlock()
+		} else if resp.Type == "partialResult" {
+			log.Println(resp.Type, resp.Value)
+			game.Lock()
+			game.Lang = "debug"
+			game.Str = resp.Value
 			game.Start = time.Now()
 			game.Unlock()
 		}
