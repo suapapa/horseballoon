@@ -1,14 +1,18 @@
 # horseballoon
 
-![horseballoon](resource/horseballoon.png)
+![horseballoon](resource/voice-translator.png)
 
-[개인방송](https://twitch.tv/suapapa)에서 사용하고 있는 한-영 음성 자동 변환기
+* [개인방송](https://twitch.tv/suapapa)에서 사용하고 있는 한-영 음성 자동 변환 **말풍선** 프로그램.
+* This is a program to make English text bubble from Korean speech in real time.
+* [Introduction video](https://youtu.be/eFf7GtkCA1M)
 
 # build and run
 
-Dependency:
+Install dependency:
 
-    portaudio
+    $ apt install portaudio19-dev # Linux
+
+    $ brew install portaudio # Mac
 
 Clone and build:
 
