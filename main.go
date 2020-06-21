@@ -9,6 +9,9 @@ import (
 	"flag"
 	"log"
 	"sync"
+
+	"net/http"
+	_ "net/http/pprof"
 )
 
 type ctxKey struct{}
@@ -19,9 +22,14 @@ var (
 )
 
 func main() {
-	flag.IntVar(&recordBuffSize, "b", sampleRate /* 64 */, "record buffer size")
+	flag.IntVar(&recordBuffSize, "b", sampleRate /* 16000 */, "record buffer size")
 	flag.IntVar(&quiteThreshhold, "t", -30, "theshold for turn to onair")
 	flag.Parse()
+
+	go func() {
+		// go tool pprof -http :8080  http://localhost:6060/debug/pprof/profile\?seconds\=30
+		log.Println(http.ListenAndServe("localhost:6060", nil))
+	}()
 
 	log.Println("press ctrl-c to stop.")
 

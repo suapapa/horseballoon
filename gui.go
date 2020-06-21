@@ -34,8 +34,13 @@ var (
 func (g *Game) Update(screen *ebiten.Image) error {
 	g.Lock()
 	defer g.Unlock()
+	if g.Str == "" {
+		return nil
+	}
+
 	elapse := time.Now().Sub(g.Start)
 	if elapse > 3*time.Second {
+		// log.Println("delete", g.Str)
 		g.Str = ""
 	}
 
@@ -48,10 +53,13 @@ func (g *Game) Draw(screen *ebiten.Image) {
 	screen.Fill(maskColor)
 	g.RLock()
 	defer g.RUnlock()
+	if g.Str == "" {
+		return
+	}
 	if g.Lang == "en" {
 		drawTextBullon(screen, g.Str, color.White)
 	} else {
-		drawTextBullon(screen, g.Str, color.Black)
+		drawTextBullon(screen, g.Str, color.NRGBA{0x5e, 0x53, 0x5f, 0xff})
 	}
 }
 
@@ -68,7 +76,7 @@ func gui() {
 	// Sepcify the window size as you like. Here, a doulbed size is specified.
 	ebiten.SetWindowSize(screenWidth, screenHeight)
 	ebiten.SetWindowTitle("voice-translator")
-	ebiten.SetMaxTPS(5)
+	ebiten.SetMaxTPS(10)
 	ebiten.SetRunnableOnUnfocused(true)
 	// Call ebiten.RunGame to start your game loop.
 	if err := ebiten.RunGame(&game); err != nil {
