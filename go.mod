@@ -1,4 +1,4 @@
-module github.com/suapapa/voice-translator
+module github.com/suapapa/horseballoon
 
 go 1.14
 
